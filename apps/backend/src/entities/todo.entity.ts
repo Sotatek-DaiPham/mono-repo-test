@@ -15,6 +15,12 @@ export enum TodoStatus {
   DONE = 'done',
 }
 
+export enum TodoPriority {
+  LOW = 'low',
+  MEDIUM = 'medium',
+  HIGH = 'high',
+}
+
 @Entity('todos')
 export class Todo {
   @PrimaryGeneratedColumn('uuid')
@@ -32,6 +38,13 @@ export class Todo {
 
   @Column({ type: 'date', nullable: true })
   dueDate: Date | null;
+
+  @Column({
+    type: 'enum',
+    enum: TodoPriority,
+    nullable: true,
+  })
+  priority: TodoPriority | null;
 
   @Column({ type: 'uuid' })
   userId: string;

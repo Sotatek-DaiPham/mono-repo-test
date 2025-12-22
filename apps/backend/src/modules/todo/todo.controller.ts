@@ -21,7 +21,7 @@ import {
 import { IsString, IsOptional, IsEnum, IsDateString } from 'class-validator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { TodoService } from './todo.service';
-import { Todo, TodoStatus } from '../../entities/todo.entity';
+import { Todo, TodoStatus, TodoPriority } from '../../entities/todo.entity';
 
 export class CreateTodoDto {
   @ApiProperty({ example: 'Complete project documentation' })
@@ -37,6 +37,11 @@ export class CreateTodoDto {
   @IsOptional()
   @IsDateString()
   dueDate?: Date | null;
+
+  @ApiProperty({ enum: TodoPriority, required: false, description: 'Priority level (Pro tier only)' })
+  @IsOptional()
+  @IsEnum(TodoPriority)
+  priority?: TodoPriority | null;
 }
 
 export class UpdateTodoDto {
@@ -54,6 +59,11 @@ export class UpdateTodoDto {
   @IsOptional()
   @IsDateString()
   dueDate?: Date | null;
+
+  @ApiProperty({ enum: TodoPriority, required: false, description: 'Priority level (Pro tier only)' })
+  @IsOptional()
+  @IsEnum(TodoPriority)
+  priority?: TodoPriority | null;
 }
 
 @ApiTags('todos')
