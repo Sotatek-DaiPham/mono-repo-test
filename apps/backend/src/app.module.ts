@@ -6,6 +6,7 @@ import jwtConfig from './config/jwt.config';
 import { UserModule } from './modules/user/user.module';
 import { TodoModule } from './modules/todo/todo.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { AuthModule } from './modules/auth/auth.module';
     UserModule,
     TodoModule,
     AuthModule,
+    AdminModule,
   ],
   controllers: [],
   providers: [],
