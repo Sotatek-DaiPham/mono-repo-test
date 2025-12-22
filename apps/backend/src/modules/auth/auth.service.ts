@@ -20,6 +20,11 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    // Check banned status
+    if (user.isBanned) {
+      throw new UnauthorizedException('Account is banned');
+    }
+
     // Compare hashed password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {

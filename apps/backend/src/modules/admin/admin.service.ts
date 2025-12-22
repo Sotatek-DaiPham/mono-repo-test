@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User, UserRole, UserTier } from '../../entities/user.entity';
@@ -103,10 +103,15 @@ export class AdminService {
     return result;
   }
 
-  async banUser(id: string) {
+  async banUser(id: string, adminId: string) {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    // Prevent admin from banning themselves
+    if (id === adminId) {
+      throw new ForbiddenException('Cannot ban yourself');
     }
 
     user.isBanned = true;

@@ -54,9 +54,9 @@ export class AdminController {
   @ApiOperation({ summary: 'Ban a user' })
   @ApiResponse({ status: 200, description: 'User banned' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  @ApiResponse({ status: 403, description: 'Admin access required' })
-  async banUser(@Param('id') id: string) {
-    return this.adminService.banUser(id);
+  @ApiResponse({ status: 403, description: 'Admin access required or cannot ban yourself' })
+  async banUser(@Param('id') id: string, @Request() req) {
+    return this.adminService.banUser(id, req.user.userId);
   }
 
   @Post('users/:id/unban')
