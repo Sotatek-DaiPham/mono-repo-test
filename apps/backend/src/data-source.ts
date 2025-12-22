@@ -1,5 +1,7 @@
 import { DataSource } from 'typeorm';
 import { config } from 'dotenv';
+import { User } from './entities/user.entity';
+import { Todo } from './entities/todo.entity';
 
 config();
 
@@ -12,7 +14,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_DATABASE || 'fullstack_crud',
   synchronize: process.env.NODE_ENV === 'development',
   logging: process.env.NODE_ENV === 'development',
-  entities: [__dirname + '/**/*.entity{.ts,.js}'],
+  entities: [User, Todo],
   migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
 });
 
