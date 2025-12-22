@@ -14,10 +14,48 @@ export class LoginDto {
   password: string;
 }
 
+export class RegisterDto {
+  @ApiProperty({ example: 'newuser@example.com', description: 'User email address' })
+  @IsEmail()
+  email: string;
+
+  @ApiProperty({ example: 'password123', description: 'User password (min 6 characters)' })
+  @IsString()
+  @MinLength(6)
+  password: string;
+}
+
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
+  @Post('register')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'User registration' })
+  @ApiResponse({
+    status: 201,
+    description: 'User registered successfully',
+    schema: {
+      example: {
+        id: 'uuid',
+        email: 'newuser@example.com',
+        role: 'user',
+        tier: 'normal',
+        isBanned: false,
+        createdAt: '2024-01-01T00:00:00.000Z',
+        updatedAt: '2024-01-01T00:00:00.000Z',
+      },
+    },
+  })
+  @ApiResponse({ status: 409, description: 'Email already exists' })
+  async register(@Body() registerDto: RegisterDto) {
+    const user = await this.authService.register(
+      registerDto.email,
+      registerDto.password,
+    );
+    return user;
+  }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)

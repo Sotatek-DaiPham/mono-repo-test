@@ -1,4 +1,5 @@
 import { DataSource } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import { AppDataSource } from '../data-source';
 import { User, UserRole, UserTier } from '../entities/user.entity';
 
@@ -19,10 +20,14 @@ async function seed() {
       return;
     }
 
+    // Hash passwords
+    const adminPasswordHash = await bcrypt.hash('admin123', 10);
+    const userPasswordHash = await bcrypt.hash('user123', 10);
+
     // Create admin user
     const adminUser = userRepository.create({
       email: 'admin@example.com',
-      password: 'admin123', // Will be hashed in Step 2/3
+      password: adminPasswordHash,
       role: UserRole.ADMIN,
       tier: UserTier.NORMAL,
       isBanned: false,
@@ -33,7 +38,7 @@ async function seed() {
     // Create normal user
     const normalUser = userRepository.create({
       email: 'user@example.com',
-      password: 'user123', // Will be hashed in Step 2/3
+      password: userPasswordHash,
       role: UserRole.USER,
       tier: UserTier.NORMAL,
       isBanned: false,

@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  ConflictException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
@@ -16,12 +20,31 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // For now, compare plain text (will hash in seed later)
-    // In Step 2, we'll hash passwords when seeding
-    const isPasswordValid = password === user.password;
+    // Compare hashed password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
+
+    const { password: _, ...result } = user;
+    return result;
+  }
+
+  async register(email: string, password: string) {
+    // Check if email already exists
+    const existingUser = await this.userService.findByEmail(email);
+    if (existingUser) {
+      throw new ConflictException('Email already exists');
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create user
+    const user = await this.userService.create({
+      email,
+      password: hashedPassword,
+    });
 
     const { password: _, ...result } = user;
     return result;
