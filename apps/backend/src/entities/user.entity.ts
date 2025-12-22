@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
-// import { Todo } from './todo.entity'; // Will be uncommented when Todo entity is created
+import { Todo } from './todo.entity';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -47,8 +47,8 @@ export class User {
   @Column({ default: false })
   isBanned: boolean;
 
-  // @OneToMany(() => Todo, (todo) => todo.user)
-  // todos: Todo[]; // Will be uncommented when Todo entity is created
+  @OneToMany(() => Todo, (todo) => todo.user)
+  todos: Todo[];
 
   @CreateDateColumn()
   createdAt: Date;
