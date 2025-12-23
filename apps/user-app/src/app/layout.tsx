@@ -3,8 +3,8 @@ import { AppProviders } from './providers'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Todo App',
-  description: 'User Todo Application',
+  title: 'TaskFlow',
+  description: 'Organize your tasks and boost your productivity',
 }
 
 export default function RootLayout({
