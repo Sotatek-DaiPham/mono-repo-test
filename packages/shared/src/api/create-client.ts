@@ -1,7 +1,7 @@
 // API client factory
 
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
-import { ApiException, handleApiError } from '../utils/errors';
+import { handleApiError } from '../utils/errors';
 
 export interface ApiClientConfig {
   baseURL: string;

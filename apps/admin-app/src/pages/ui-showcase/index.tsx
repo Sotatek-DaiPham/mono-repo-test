@@ -1,82 +1,85 @@
 import { useState } from 'react';
-
-// Basic UI Components (will be replaced with actual components later)
-const Button = ({ children, variant = 'default', ...props }: { children: React.ReactNode; variant?: string; [key: string]: any }) => {
-  const baseClasses = 'px-4 py-2 rounded-md font-medium transition-colors';
-  const variants: Record<string, string> = {
-    default: 'bg-blue-600 text-white hover:bg-blue-700',
-    outline: 'border border-gray-300 bg-white hover:bg-gray-50',
-    ghost: 'hover:bg-gray-100',
-    destructive: 'bg-red-600 text-white hover:bg-red-700',
-  };
-  return (
-    <button className={`${baseClasses} ${variants[variant] || variants.default}`} {...props}>
-      {children}
-    </button>
-  );
-};
-
-const Card = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
-  <div className={`bg-white border border-gray-200 rounded-lg shadow-sm ${className}`}>
-    {children}
-  </div>
-);
-
-const CardHeader = ({ children }: { children: React.ReactNode }) => (
-  <div className="p-6 border-b border-gray-200">{children}</div>
-);
-
-const CardTitle = ({ children }: { children: React.ReactNode }) => (
-  <h3 className="text-lg font-semibold">{children}</h3>
-);
-
-const CardDescription = ({ children }: { children: React.ReactNode }) => (
-  <p className="text-sm text-gray-500 mt-1">{children}</p>
-);
-
-const CardContent = ({ children }: { children: React.ReactNode }) => (
-  <div className="p-6">{children}</div>
-);
-
-const Input = ({ className = '', ...props }: { className?: string; [key: string]: any }) => (
-  <input
-    className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
-    {...props}
-  />
-);
-
-const Label = ({ children, htmlFor }: { children: React.ReactNode; htmlFor?: string }) => (
-  <label htmlFor={htmlFor} className="block text-sm font-medium text-gray-700 mb-1">
-    {children}
-  </label>
-);
-
-const Badge = ({ children, variant = 'default' }: { children: React.ReactNode; variant?: string }) => {
-  const variants: Record<string, string> = {
-    default: 'bg-gray-100 text-gray-800',
-    success: 'bg-green-100 text-green-800',
-    destructive: 'bg-red-100 text-red-800',
-    outline: 'border border-gray-300 bg-white',
-  };
-  return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${variants[variant] || variants.default}`}>
-      {children}
-    </span>
-  );
-};
-
-const Alert = ({ children, variant = 'default' }: { children: React.ReactNode; variant?: string }) => {
-  const variants: Record<string, string> = {
-    default: 'bg-blue-50 border-blue-200 text-blue-800',
-    success: 'bg-green-50 border-green-200 text-green-800',
-    destructive: 'bg-red-50 border-red-200 text-red-800',
-  };
-  return (
-    <div className={`border rounded-md p-4 ${variants[variant] || variants.default}`}>
-      {children}
-    </div>
-  );
-};
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+  Textarea,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Checkbox,
+  RadioGroup,
+  RadioGroupItem,
+  Switch,
+  Slider,
+  Progress,
+  Badge,
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+  Separator,
+  Skeleton,
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+  Calendar,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/shared/ui';
+import { CheckCircle2, Info, XCircle, Menu, ChevronDown } from 'lucide-react';
 
 const components = [
   { id: 'buttons', name: 'Buttons' },
@@ -84,11 +87,23 @@ const components = [
   { id: 'cards', name: 'Cards' },
   { id: 'badges', name: 'Badges' },
   { id: 'alerts', name: 'Alerts' },
+  { id: 'dialogs', name: 'Dialogs' },
+  { id: 'dropdowns', name: 'Dropdowns' },
+  { id: 'popovers', name: 'Popovers' },
+  { id: 'tabs', name: 'Tabs' },
+  { id: 'accordion', name: 'Accordion' },
+  { id: 'tables', name: 'Tables' },
+  { id: 'forms', name: 'Forms' },
+  { id: 'feedback', name: 'Feedback' },
+  { id: 'navigation', name: 'Navigation' },
 ];
 
 export function UIShowcasePage() {
   const [selectedComponent, setSelectedComponent] = useState('buttons');
-  const [inputValue, setInputValue] = useState('');
+  const [sliderValue, setSliderValue] = useState([50]);
+  const [progressValue, setProgressValue] = useState(33);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [alertDialogOpen, setAlertDialogOpen] = useState(false);
 
   const renderComponent = () => {
     switch (selectedComponent) {
@@ -99,9 +114,23 @@ export function UIShowcasePage() {
               <h3 className="text-lg font-semibold mb-4">Variants</h3>
               <div className="flex flex-wrap gap-4">
                 <Button>Default</Button>
-                <Button variant="outline">Outline</Button>
-                <Button variant="ghost">Ghost</Button>
+                <Button variant="default">Default</Button>
                 <Button variant="destructive">Destructive</Button>
+                <Button variant="outline">Outline</Button>
+                <Button variant="secondary">Secondary</Button>
+                <Button variant="ghost">Ghost</Button>
+                <Button variant="link">Link</Button>
+              </div>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Sizes</h3>
+              <div className="flex flex-wrap items-center gap-4">
+                <Button size="sm">Small</Button>
+                <Button size="default">Default</Button>
+                <Button size="lg">Large</Button>
+                <Button size="icon">
+                  <Menu className="h-4 w-4" />
+                </Button>
               </div>
             </div>
             <div>
@@ -122,7 +151,7 @@ export function UIShowcasePage() {
               <div className="space-y-4 max-w-md">
                 <div>
                   <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" placeholder="Enter your email" value={inputValue} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)} />
+                  <Input id="email" type="email" placeholder="Enter your email" />
                 </div>
                 <div>
                   <Label htmlFor="password">Password</Label>
@@ -132,6 +161,72 @@ export function UIShowcasePage() {
                   <Label htmlFor="disabled">Disabled</Label>
                   <Input id="disabled" disabled placeholder="Disabled input" />
                 </div>
+              </div>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Textarea</h3>
+              <div className="max-w-md">
+                <Label htmlFor="message">Message</Label>
+                <Textarea id="message" placeholder="Type your message here" />
+              </div>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Select</h3>
+              <div className="max-w-md">
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select an option" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="option1">Option 1</SelectItem>
+                    <SelectItem value="option2">Option 2</SelectItem>
+                    <SelectItem value="option3">Option 3</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Checkbox</h3>
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2">
+                  <Checkbox id="terms" />
+                  <Label htmlFor="terms">Accept terms and conditions</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox id="newsletter" defaultChecked />
+                  <Label htmlFor="newsletter">Subscribe to newsletter</Label>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Radio Group</h3>
+              <RadioGroup defaultValue="option1">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="option1" id="r1" />
+                  <Label htmlFor="r1">Option 1</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="option2" id="r2" />
+                  <Label htmlFor="r2">Option 2</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="option3" id="r3" />
+                  <Label htmlFor="r3">Option 3</Label>
+                </div>
+              </RadioGroup>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Switch</h3>
+              <div className="flex items-center space-x-2">
+                <Switch id="airplane-mode" />
+                <Label htmlFor="airplane-mode">Airplane Mode</Label>
+              </div>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Slider</h3>
+              <div className="max-w-md space-y-2">
+                <Slider value={sliderValue} onValueChange={setSliderValue} max={100} step={1} />
+                <div className="text-sm text-muted-foreground">Value: {sliderValue[0]}</div>
               </div>
             </div>
           </div>
@@ -170,7 +265,7 @@ export function UIShowcasePage() {
               <h3 className="text-lg font-semibold mb-4">Variants</h3>
               <div className="flex flex-wrap gap-2">
                 <Badge>Default</Badge>
-                <Badge variant="success">Success</Badge>
+                <Badge variant="secondary">Secondary</Badge>
                 <Badge variant="destructive">Destructive</Badge>
                 <Badge variant="outline">Outline</Badge>
               </div>
@@ -182,17 +277,319 @@ export function UIShowcasePage() {
         return (
           <div className="space-y-6">
             <Alert>
-              <div className="font-medium mb-1">Info</div>
-              <div className="text-sm">This is an informational alert.</div>
+              <Info className="h-4 w-4" />
+              <AlertTitle>Info</AlertTitle>
+              <AlertDescription>This is an informational alert.</AlertDescription>
             </Alert>
-            <Alert variant="success">
-              <div className="font-medium mb-1">Success</div>
-              <div className="text-sm">Operation completed successfully.</div>
+            <Alert variant="default">
+              <CheckCircle2 className="h-4 w-4" />
+              <AlertTitle>Success</AlertTitle>
+              <AlertDescription>Operation completed successfully.</AlertDescription>
             </Alert>
             <Alert variant="destructive">
-              <div className="font-medium mb-1">Error</div>
-              <div className="text-sm">Something went wrong. Please try again.</div>
+              <XCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>Something went wrong. Please try again.</AlertDescription>
             </Alert>
+          </div>
+        );
+
+      case 'dialogs':
+        return (
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Dialog</h3>
+              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button>Open Dialog</Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Are you sure?</DialogTitle>
+                    <DialogDescription>
+                      This action cannot be undone. This will permanently delete your account.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="flex justify-end gap-2 mt-4">
+                    <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
+                    <Button variant="destructive" onClick={() => setDialogOpen(false)}>Delete</Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Alert Dialog</h3>
+              <AlertDialog open={alertDialogOpen} onOpenChange={setAlertDialogOpen}>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive">Delete Account</Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete your account
+                      and remove your data from our servers.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel onClick={() => setAlertDialogOpen(false)}>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => setAlertDialogOpen(false)}>Continue</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          </div>
+        );
+
+      case 'dropdowns':
+        return (
+          <div className="space-y-6">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">
+                  Open Menu <ChevronDown className="ml-2 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <DropdownMenuItem>Settings</DropdownMenuItem>
+                <DropdownMenuItem>Logout</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        );
+
+      case 'popovers':
+        return (
+          <div className="space-y-6">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline">Open Popover</Button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <div className="space-y-2">
+                  <h4 className="font-medium">Dimensions</h4>
+                  <p className="text-sm text-muted-foreground">Set the dimensions for the layer.</p>
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
+        );
+
+      case 'tabs':
+        return (
+          <div className="space-y-6">
+            <Tabs defaultValue="account" className="w-full">
+              <TabsList>
+                <TabsTrigger value="account">Account</TabsTrigger>
+                <TabsTrigger value="password">Password</TabsTrigger>
+                <TabsTrigger value="settings">Settings</TabsTrigger>
+              </TabsList>
+              <TabsContent value="account" className="space-y-2">
+                <p>Make changes to your account here.</p>
+              </TabsContent>
+              <TabsContent value="password" className="space-y-2">
+                <p>Change your password here.</p>
+              </TabsContent>
+              <TabsContent value="settings" className="space-y-2">
+                <p>Update your settings here.</p>
+              </TabsContent>
+            </Tabs>
+          </div>
+        );
+
+      case 'accordion':
+        return (
+          <div className="space-y-6">
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="item-1">
+                <AccordionTrigger>Is it accessible?</AccordionTrigger>
+                <AccordionContent>
+                  Yes. It adheres to the WAI-ARIA design pattern.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-2">
+                <AccordionTrigger>Is it styled?</AccordionTrigger>
+                <AccordionContent>
+                  Yes. It comes with default styles that match the other components&apos; aesthetic.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-3">
+                <AccordionTrigger>Is it animated?</AccordionTrigger>
+                <AccordionContent>
+                  Yes. It&apos;s animated by default, but you can disable it if you prefer.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
+        );
+
+      case 'tables':
+        return (
+          <div className="space-y-6">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Role</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell>John Doe</TableCell>
+                  <TableCell>
+                    <Badge variant="secondary">Active</Badge>
+                  </TableCell>
+                  <TableCell>Admin</TableCell>
+                  <TableCell className="text-right">
+                    <Button variant="ghost" size="sm">Edit</Button>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Jane Smith</TableCell>
+                  <TableCell>
+                    <Badge variant="destructive">Inactive</Badge>
+                  </TableCell>
+                  <TableCell>User</TableCell>
+                  <TableCell className="text-right">
+                    <Button variant="ghost" size="sm">Edit</Button>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+        );
+
+      case 'forms':
+        return (
+          <div className="space-y-6">
+            <Card className="max-w-md">
+              <CardHeader>
+                <CardTitle>Example Form</CardTitle>
+                <CardDescription>This is a sample form with various inputs</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="form-email">Email</Label>
+                  <Input id="form-email" type="email" placeholder="email@example.com" />
+                </div>
+                <div>
+                  <Label htmlFor="form-select">Country</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select country" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="us">United States</SelectItem>
+                      <SelectItem value="uk">United Kingdom</SelectItem>
+                      <SelectItem value="vn">Vietnam</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="form-message">Message</Label>
+                  <Textarea id="form-message" placeholder="Your message" />
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox id="form-terms" />
+                  <Label htmlFor="form-terms">I agree to the terms</Label>
+                </div>
+                <Button className="w-full">Submit</Button>
+              </CardContent>
+            </Card>
+          </div>
+        );
+
+      case 'feedback':
+        return (
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Progress</h3>
+              <div className="space-y-2 max-w-md">
+                <Progress value={progressValue} />
+                <div className="flex gap-2">
+                  <Button size="sm" onClick={() => setProgressValue(Math.max(0, progressValue - 10))}>
+                    -
+                  </Button>
+                  <Button size="sm" onClick={() => setProgressValue(Math.min(100, progressValue + 10))}>
+                    +
+                  </Button>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Skeleton</h3>
+              <div className="space-y-2 max-w-md">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Tooltip</h3>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="outline">Hover me</Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>This is a tooltip</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Avatar</h3>
+              <div className="flex gap-4">
+                <Avatar>
+                  <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+                <Avatar>
+                  <AvatarFallback>JD</AvatarFallback>
+                </Avatar>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'navigation':
+        return (
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Breadcrumb</h3>
+              <Breadcrumb>
+                <BreadcrumbList>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink href="#">Home</BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <BreadcrumbLink href="#">Components</BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Calendar</h3>
+              <Calendar mode="single" className="rounded-md border" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Separator</h3>
+              <div>
+                <div>Content above</div>
+                <Separator className="my-4" />
+                <div>Content below</div>
+              </div>
+            </div>
           </div>
         );
 
@@ -202,11 +599,11 @@ export function UIShowcasePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="border-b bg-white">
+    <div className="min-h-screen bg-background">
+      <div className="border-b">
         <div className="container mx-auto px-4 py-4">
           <h1 className="text-2xl font-bold">UI Component Showcase</h1>
-          <p className="text-gray-600">Preview and test all available UI components</p>
+          <p className="text-muted-foreground">Preview and test all available UI components</p>
         </div>
       </div>
 
@@ -214,15 +611,15 @@ export function UIShowcasePage() {
         <div className="flex gap-6">
           {/* Sidebar Navigation */}
           <aside className="w-64 shrink-0">
-            <nav className="space-y-1 bg-white rounded-lg border border-gray-200 p-2">
+            <nav className="space-y-1">
               {components.map((component) => (
                 <button
                   key={component.id}
                   onClick={() => setSelectedComponent(component.id)}
                   className={`w-full text-left px-4 py-2 rounded-md transition-colors ${
                     selectedComponent === component.id
-                      ? 'bg-blue-600 text-white'
-                      : 'hover:bg-gray-100'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'hover:bg-accent hover:text-accent-foreground'
                   }`}
                 >
                   {component.name}
@@ -248,4 +645,3 @@ export function UIShowcasePage() {
     </div>
   );
 }
-
