@@ -1,0 +1,73 @@
+// API request/response types
+
+import { User, Todo, TodoStatus, TodoPriority } from '@/entities';
+
+// Auth API
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface RegisterRequest {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  access_token: string;
+  user: {
+    id: string;
+    email: string;
+    role: string;
+    tier: string;
+  };
+}
+
+// Todo API
+export interface CreateTodoRequest {
+  title: string;
+  status?: TodoStatus;
+  dueDate?: string | null;
+  priority?: TodoPriority | null;
+}
+
+export interface UpdateTodoRequest {
+  title?: string;
+  status?: TodoStatus;
+  dueDate?: string | null;
+  priority?: TodoPriority | null;
+}
+
+// Admin API
+export interface UserListResponse {
+  data: User[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+export interface UserDetailResponse extends User {
+  todosCount?: number;
+}
+
+export interface UpdateTierRequest {
+  tier: string;
+}
+
+// Common API response wrapper
+export interface ApiResponse<T = unknown> {
+  data?: T;
+  message?: string;
+  error?: string;
+}
+
+// API Error response
+export interface ApiError {
+  message: string | string[];
+  error: string;
+  statusCode: number;
+}
+
