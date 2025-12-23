@@ -1,3 +1,3 @@
-// Business entities (User, Todo, etc.)
-export {};
-
+// Export all entities
+export * from './user';
+export * from './todo';
