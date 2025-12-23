@@ -1,22 +1,10 @@
 // API request/response types
 
-import { User, UserDetail, UserTier } from '@/entities/user';
+import { User, UserTier } from '@/entities/user';
+import { LoginRequest, LoginResponse } from '@repo/shared';
 
-// Auth API
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface LoginResponse {
-  access_token: string;
-  user: {
-    id: string;
-    email: string;
-    role: string;
-    tier: string;
-  };
-}
+// Re-export common types from shared
+export type { LoginRequest, LoginResponse };
 
 // Admin API
 export interface UserListQueryParams {
@@ -44,10 +32,6 @@ export interface UpdateTierRequest {
   tier: UserTier;
 }
 
-// API Error response
-export interface ApiError {
-  message: string | string[];
-  error: string;
-  statusCode: number;
-}
+// Re-export ApiError from shared
+export type { ApiError } from '@repo/shared';
 

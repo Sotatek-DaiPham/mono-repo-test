@@ -1,47 +1,14 @@
-// Axios API client with interceptors
+// API client using shared factory
 
-import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
+import { createApiClient } from '@repo/shared';
 import { API_BASE_URL } from '../config';
 import { storage } from '../lib/utils/storage';
-import { handleApiError } from '../lib/utils/errors';
 
-// Create axios instance
-export const apiClient: AxiosInstance = axios.create({
+export const apiClient = createApiClient({
   baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
+  getToken: () => storage.getToken(),
+  onUnauthorized: () => {
+    storage.clearAuth();
+    // Redirect will be handled by auth guard/route protection in Next.js
   },
 });
-
-// Request interceptor - Add auth token
-apiClient.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    const token = storage.getToken();
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-// Response interceptor - Handle errors
-apiClient.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    const apiException = handleApiError(error);
-    
-    // Handle 401 Unauthorized - Clear auth and redirect to login
-    if (apiException.statusCode === 401) {
-      storage.clearAuth();
-      // Redirect will be handled by auth guard/route protection
-    }
-
-    return Promise.reject(apiException);
-  }
-);
-

@@ -1,27 +1,10 @@
 // API request/response types
 
 import { User, Todo, TodoStatus, TodoPriority } from '@/entities';
+import { LoginRequest, RegisterRequest, LoginResponse } from '@repo/shared';
 
-// Auth API
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface RegisterRequest {
-  email: string;
-  password: string;
-}
-
-export interface LoginResponse {
-  access_token: string;
-  user: {
-    id: string;
-    email: string;
-    role: string;
-    tier: string;
-  };
-}
+// Re-export common types from shared
+export type { LoginRequest, RegisterRequest, LoginResponse };
 
 // Todo API
 export interface CreateTodoRequest {
@@ -57,17 +40,13 @@ export interface UpdateTierRequest {
   tier: string;
 }
 
+// Re-export ApiError from shared
+export type { ApiError } from '@repo/shared';
+
 // Common API response wrapper
 export interface ApiResponse<T = unknown> {
   data?: T;
   message?: string;
   error?: string;
-}
-
-// API Error response
-export interface ApiError {
-  message: string | string[];
-  error: string;
-  statusCode: number;
 }
 

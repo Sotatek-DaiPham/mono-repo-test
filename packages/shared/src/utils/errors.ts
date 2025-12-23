@@ -1,6 +1,10 @@
 // Error handling utilities
 
-import { ApiError } from '../types';
+export interface ApiError {
+  message: string | string[];
+  error: string;
+  statusCode: number;
+}
 
 export class ApiException extends Error {
   constructor(
