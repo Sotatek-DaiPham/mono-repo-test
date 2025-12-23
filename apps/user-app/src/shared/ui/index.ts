@@ -1,3 +1,3 @@
 // Shared UI components (buttons, inputs, etc.)
-export {};
+export { ThemeToggle } from './theme-toggle';
 

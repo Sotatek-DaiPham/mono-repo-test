@@ -61,6 +61,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Calendar } from '@/components/ui/calendar';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { CheckCircle2, Info, XCircle, Menu, ChevronDown } from 'lucide-react';
+import { ThemeToggle } from '@/shared/ui';
 
 const components = [
   { id: 'buttons', name: 'Buttons' },
@@ -582,9 +583,12 @@ export default function UIShowcasePage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="border-b">
-        <div className="container mx-auto px-4 py-4">
-          <h1 className="text-2xl font-bold">UI Component Showcase</h1>
-          <p className="text-muted-foreground">Preview and test all available UI components</p>
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold">UI Component Showcase</h1>
+            <p className="text-muted-foreground">Preview and test all available UI components</p>
+          </div>
+          <ThemeToggle />
         </div>
       </div>
 
