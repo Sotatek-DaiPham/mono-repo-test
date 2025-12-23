@@ -5,5 +5,6 @@ export const ROUTES = {
   LOGIN: '/login',
   DASHBOARD: '/dashboard',
   USERS: '/users',
+  UI_SHOWCASE: '/ui',
 } as const;
 
