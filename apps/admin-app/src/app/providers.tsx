@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ThemeProvider } from '@/shared/lib/theme';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -14,7 +15,11 @@ const queryClient = new QueryClient({
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <BrowserRouter>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider defaultTheme="system" enableSystem>
+          {children}
+        </ThemeProvider>
+      </QueryClientProvider>
     </BrowserRouter>
   );
 }

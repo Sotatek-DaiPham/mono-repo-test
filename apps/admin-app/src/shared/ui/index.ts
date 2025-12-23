@@ -137,3 +137,4 @@ export {
   FormField,
   useFormField,
 } from './form';
+export { ThemeToggle } from './theme-toggle';
