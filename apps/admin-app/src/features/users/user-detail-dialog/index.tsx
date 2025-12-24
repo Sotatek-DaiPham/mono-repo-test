@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from '@/shared/ui/select';
 import { Badge } from '@/shared/ui/badge';
+import { ConfirmDialog } from '@/shared/ui/confirm-dialog';
 import { Loader2, Ban, Unlock, Save } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
@@ -96,15 +97,11 @@ export function UserDetailDialog({
   };
 
   const handleBan = () => {
-    if (confirm('Are you sure you want to ban this user?')) {
-      banUserMutation.mutate();
-    }
+    banUserMutation.mutate();
   };
 
   const handleUnban = () => {
-    if (confirm('Are you sure you want to unban this user?')) {
-      unbanUserMutation.mutate();
-    }
+    unbanUserMutation.mutate();
   };
 
   if (!userId) return null;
@@ -215,33 +212,52 @@ export function UserDetailDialog({
             {/* Ban/Unban Actions */}
             <div className="flex gap-2 border-t pt-4">
               {user.isBanned ? (
-                <Button
-                  variant="outline"
-                  onClick={handleUnban}
-                  disabled={unbanUserMutation.isPending}
-                  className="flex-1"
+                <ConfirmDialog
+                  title="Unban User"
+                  description="Are you sure you want to unban this user? They will be able to access the system again."
+                  confirmText="Unban"
+                  onConfirm={handleUnban}
                 >
-                  {unbanUserMutation.isPending ? (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  ) : (
-                    <Unlock className="h-4 w-4 mr-2" />
+                  {(open) => (
+                    <Button
+                      variant="outline"
+                      onClick={open}
+                      disabled={unbanUserMutation.isPending}
+                      className="flex-1"
+                    >
+                      {unbanUserMutation.isPending ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <Unlock className="h-4 w-4 mr-2" />
+                      )}
+                      Unban User
+                    </Button>
                   )}
-                  Unban User
-                </Button>
+                </ConfirmDialog>
               ) : (
-                <Button
+                <ConfirmDialog
+                  title="Ban User"
+                  description="Are you sure you want to ban this user? They will lose access to the system."
+                  confirmText="Ban"
                   variant="destructive"
-                  onClick={handleBan}
-                  disabled={banUserMutation.isPending}
-                  className="flex-1"
+                  onConfirm={handleBan}
                 >
-                  {banUserMutation.isPending ? (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  ) : (
-                    <Ban className="h-4 w-4 mr-2" />
+                  {(open) => (
+                    <Button
+                      variant="destructive"
+                      onClick={open}
+                      disabled={banUserMutation.isPending}
+                      className="flex-1"
+                    >
+                      {banUserMutation.isPending ? (
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      ) : (
+                        <Ban className="h-4 w-4 mr-2" />
+                      )}
+                      Ban User
+                    </Button>
                   )}
-                  Ban User
-                </Button>
+                </ConfirmDialog>
               )}
             </div>
           </div>

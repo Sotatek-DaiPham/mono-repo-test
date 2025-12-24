@@ -26,6 +26,7 @@ import { Plus, Trash2, Loader2, Calendar as CalendarIcon, X } from 'lucide-react
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 
 function TodosPageContent() {
   const queryClient = useQueryClient();
@@ -111,9 +112,7 @@ function TodosPageContent() {
   };
 
   const handleDelete = (id: string) => {
-    if (confirm('Are you sure you want to delete this todo?')) {
-      deleteMutation.mutate(id);
-    }
+    deleteMutation.mutate(id);
   };
 
   const handlePriorityChange = (todo: Todo, priority: string) => {
@@ -391,19 +390,29 @@ function TodosPageContent() {
                                   </TooltipContent>
                                 )}
                               </Tooltip>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => handleDelete(todo.id)}
-                                className="h-7 px-2"
-                                disabled={deleteMutation.isPending}
+                              <ConfirmDialog
+                                title="Delete Todo"
+                                description="Are you sure you want to delete this todo? This action cannot be undone."
+                                confirmText="Delete"
+                                variant="destructive"
+                                onConfirm={() => handleDelete(todo.id)}
                               >
-                                {deleteMutation.isPending ? (
-                                  <Loader2 className="h-3 w-3 animate-spin text-destructive" />
-                                ) : (
-                                  <Trash2 className="h-3 w-3 text-destructive" />
+                                {(open) => (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={open}
+                                    className="h-7 px-2"
+                                    disabled={deleteMutation.isPending}
+                                  >
+                                    {deleteMutation.isPending ? (
+                                      <Loader2 className="h-3 w-3 animate-spin text-destructive" />
+                                    ) : (
+                                      <Trash2 className="h-3 w-3 text-destructive" />
+                                    )}
+                                  </Button>
                                 )}
-                              </Button>
+                              </ConfirmDialog>
                             </div>
                           </div>
                         </div>

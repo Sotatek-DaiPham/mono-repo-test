@@ -140,3 +140,4 @@ export {
 export { ThemeToggle } from './theme-toggle';
 export { Pagination } from './pagination';
 export { SortableTableHeader } from './sortable-table-header';
+export { ConfirmDialog } from './confirm-dialog';
