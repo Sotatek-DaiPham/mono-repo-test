@@ -1,14 +1,31 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+import { useMutation } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { LoginForm } from '@/features/auth/login-form';
-import { CheckSquare } from 'lucide-react';
+import { useAuthStore } from '@/shared/lib/store/auth.store';
+import { ROUTES } from '@/shared/constants/routes';
+import { ApiException } from '@repo/shared';
+import { CheckSquare, XCircle } from 'lucide-react';
 
 export default function LoginPage() {
-  const handleLogin = async (data: { email: string; password: string }) => {
-    // Login logic will be added in next step
-    console.log('Login data:', data);
-  };
+  const router = useRouter();
+  const login = useAuthStore((state) => state.login);
+
+  const mutation = useMutation({
+    mutationFn: (data: { email: string; password: string }) => login(data),
+    onSuccess: () => {
+      router.push(ROUTES.TODOS);
+    },
+  });
+
+  const errorMessage = mutation.error instanceof ApiException
+    ? mutation.error.message
+    : mutation.error
+      ? 'An unexpected error occurred. Please try again.'
+      : null;
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
@@ -42,7 +59,14 @@ export default function LoginPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <LoginForm onSubmit={handleLogin} />
+            {errorMessage && (
+              <Alert variant="destructive" className="mb-4">
+                <XCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{errorMessage}</AlertDescription>
+              </Alert>
+            )}
+            <LoginForm onSubmit={(data) => mutation.mutate(data)} isLoading={mutation.isPending} />
           </CardContent>
         </Card>
       </div>
