@@ -138,3 +138,5 @@ export {
   useFormField,
 } from './form';
 export { ThemeToggle } from './theme-toggle';
+export { Pagination } from './pagination';
+export { SortableTableHeader } from './sortable-table-header';

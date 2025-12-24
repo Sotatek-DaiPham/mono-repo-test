@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsOptional, IsEnum, IsBoolean, IsString } from 'class-validator';
 import { PaginationDto } from '../../../common/dto/pagination.dto';
+import { TransformBoolean } from '../../../common/utils/transformers';
 import { UserRole, UserTier } from '../../../entities/user.entity';
 
 export class UserListQueryDto extends PaginationDto {
@@ -27,7 +28,7 @@ export class UserListQueryDto extends PaginationDto {
 
   @ApiProperty({ required: false, description: 'Filter by banned status' })
   @IsOptional()
-  @Type(() => Boolean)
+  @TransformBoolean()
   @IsBoolean()
   isBanned?: boolean;
 
