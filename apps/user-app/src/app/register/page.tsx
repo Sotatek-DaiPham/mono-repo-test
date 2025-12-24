@@ -1,8 +1,9 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { RegisterForm } from '@/features/auth/register-form';
 import { useAuthStore } from '@/shared/lib/store/auth.store';
@@ -77,6 +78,14 @@ export default function RegisterPage() {
             )}
             <RegisterForm onSubmit={(data) => mutation.mutate(data)} isLoading={mutation.isPending} />
           </CardContent>
+          <CardFooter className="flex justify-center">
+            <p className="text-sm text-muted-foreground">
+              Already have an account?{' '}
+              <Link href={ROUTES.LOGIN} className="text-primary hover:underline font-medium">
+                Sign in
+              </Link>
+            </p>
+          </CardFooter>
         </Card>
       </div>
     </div>
