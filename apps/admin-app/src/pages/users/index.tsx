@@ -23,18 +23,21 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card';
 import { Pagination } from '@/shared/ui/pagination';
 import { SortableTableHeader } from '@/shared/ui/sortable-table-header';
+import { UserDetailDialog } from '@/features/users/user-detail-dialog';
 import { Loader2, Eye, Search } from 'lucide-react';
 import { format } from 'date-fns';
 
 export function UsersPage() {
   const [params, setParams] = useState<UserListQueryParams>({
     page: 1,
-    limit: 1,
+    limit: 10,
     sortBy: 'createdAt',
     sortOrder: 'DESC',
   });
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   // Debounce search
   useEffect(() => {
@@ -257,7 +260,14 @@ export function UsersPage() {
                           {format(new Date(user.updatedAt), 'MMM dd, yyyy HH:mm')}
                         </TableCell>
                         <TableCell className="text-right">
-                          <Button variant="outline" size="sm">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedUserId(user.id);
+                              setDialogOpen(true);
+                            }}
+                          >
                             <Eye className="h-4 w-4 mr-2" />
                             View Details
                           </Button>
@@ -289,6 +299,18 @@ export function UsersPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* User Detail Dialog */}
+      <UserDetailDialog
+        userId={selectedUserId}
+        open={dialogOpen}
+        onOpenChange={(open) => {
+          setDialogOpen(open);
+          if (!open) {
+            setSelectedUserId(null);
+          }
+        }}
+      />
     </div>
   );
 }
