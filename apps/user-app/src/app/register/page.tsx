@@ -9,6 +9,7 @@ import { useAuthStore } from '@/shared/lib/store/auth.store';
 import { ROUTES } from '@/shared/constants/routes';
 import { ApiException } from '@repo/shared';
 import { CheckSquare, XCircle } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -17,7 +18,15 @@ export default function RegisterPage() {
   const mutation = useMutation({
     mutationFn: (data: { email: string; password: string }) => register(data),
     onSuccess: () => {
+      toast.success('Account created successfully! Redirecting...');
       router.push(ROUTES.TODOS);
+    },
+    onError: (error) => {
+      if (error instanceof ApiException) {
+        toast.error(error.message);
+      } else {
+        toast.error('An unexpected error occurred. Please try again.');
+      }
     },
   });
 
