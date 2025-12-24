@@ -1,8 +1,23 @@
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card';
+import { LayoutDashboard } from 'lucide-react';
+
 export function HomePage() {
   return (
-    <div className="min-h-screen p-8">
-      <h1 className="text-2xl font-bold">Admin Dashboard</h1>
-      <p className="mt-4 text-gray-600">Welcome to the Admin Panel</p>
+    <div>
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <LayoutDashboard className="h-6 w-6" />
+            <CardTitle>Admin Dashboard</CardTitle>
+          </div>
+          <CardDescription>Welcome to the Admin Panel</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p className="text-muted-foreground">
+            Manage users, view statistics, and configure system settings from this dashboard.
+          </p>
+        </CardContent>
+      </Card>
     </div>
   );
 }
