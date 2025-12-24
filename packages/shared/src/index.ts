@@ -10,3 +10,6 @@ export * from './api';
 // Export constants
 export * from './constants';
 
+// Export Socket.IO types
+export * from './socket';
+
