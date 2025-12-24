@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { Toaster } from 'sonner';
 import { ReactNode, useState } from 'react';
+import { SocketProvider } from '@/shared/lib/socket';
 
 export function AppProviders({ children }: { children: ReactNode }) {
   const [queryClient] = useState(
@@ -26,8 +27,10 @@ export function AppProviders({ children }: { children: ReactNode }) {
         enableSystem
         disableTransitionOnChange={false}
       >
-        {children}
-        <Toaster position="top-right" richColors />
+        <SocketProvider>
+          {children}
+          <Toaster position="top-right" richColors />
+        </SocketProvider>
       </NextThemesProvider>
     </QueryClientProvider>
   );
