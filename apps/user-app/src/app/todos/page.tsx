@@ -25,6 +25,7 @@ import { canUserUseFeature, getRequiredTierForFeature, getTierDisplayName } from
 import { Plus, Trash2, Loader2, Calendar as CalendarIcon, X } from 'lucide-react';
 import { useState } from 'react';
 import { format } from 'date-fns';
+import { toast } from 'sonner';
 
 function TodosPageContent() {
   const queryClient = useQueryClient();
@@ -53,6 +54,10 @@ function TodosPageContent() {
       setNewTodoDueDate(undefined);
       setNewTodoPriority(null);
       setNewTodoStatus(TodoStatus.TODO);
+      toast.success('Todo created successfully');
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : 'Failed to create todo');
     },
   });
 
@@ -62,6 +67,10 @@ function TodosPageContent() {
       todoService.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['todos'] });
+      toast.success('Todo updated successfully');
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : 'Failed to update todo');
     },
   });
 
@@ -70,6 +79,10 @@ function TodosPageContent() {
     mutationFn: (id: string) => todoService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['todos'] });
+      toast.success('Todo deleted successfully');
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : 'Failed to delete todo');
     },
   });
 
