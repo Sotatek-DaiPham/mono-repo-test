@@ -6,6 +6,7 @@ import { useAuthStore } from '@/shared/lib/store/auth.store';
 import { ThemeToggle } from '@/shared/ui';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/shared/constants/routes';
+import { getTierDisplayName } from '@/shared/lib/utils/tier';
 import { LogOut, User, CheckSquare } from 'lucide-react';
 
 interface MainLayoutProps {
@@ -46,6 +47,11 @@ export function MainLayout({ children }: MainLayoutProps) {
                     <User className="h-4 w-4" />
                     {user?.email}
                   </Link>
+                  {user?.tier && (
+                    <div className="px-2 py-1 text-xs font-semibold rounded-md bg-primary/10 text-primary border border-primary/20">
+                      {getTierDisplayName(user.tier)}
+                    </div>
+                  )}
                   <Button
                     variant="ghost"
                     size="sm"

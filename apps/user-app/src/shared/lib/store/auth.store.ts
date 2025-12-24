@@ -17,12 +17,13 @@ interface AuthStore extends AuthState {
   clearAuth: () => void;
 }
 
-export const useAuthStore = create<AuthStore>()(
+export const useAuthStore = create<AuthStore & { _hasHydrated: boolean }>()(
   persist(
     (set) => ({
       user: null,
       token: null,
       isAuthenticated: false,
+      _hasHydrated: false,
 
       login: async (credentials: LoginRequest) => {
         const response = await authService.login(credentials);
@@ -87,4 +88,11 @@ export const useAuthStore = create<AuthStore>()(
     }
   )
 );
+
+// Mark as hydrated after persist finishes
+if (typeof window !== 'undefined') {
+  useAuthStore.persist.onFinishHydration(() => {
+    useAuthStore.setState({ _hasHydrated: true });
+  });
+}
 
