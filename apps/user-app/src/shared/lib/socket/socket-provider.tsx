@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, ReactNode } from 'react';
 import { socketService, SocketConnectionState } from './socket.service';
 import { useAuthStore } from '../store/auth.store';
+import { SocketEventHandler } from './socket-event-handler';
 
 /**
  * Socket Context
@@ -53,6 +54,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
         isConnected,
       }}
     >
+      <SocketEventHandler />
       {children}
     </SocketContext.Provider>
   );

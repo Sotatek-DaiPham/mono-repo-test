@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/shared/constants/routes';
 import { getTierDisplayName } from '@/shared/lib/utils/tier';
 import { LogOut, User, CheckSquare } from 'lucide-react';
+import { NotificationBell } from '@/widgets/notifications/notification-bell';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -52,6 +53,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                       {getTierDisplayName(user.tier)}
                     </div>
                   )}
+                  <NotificationBell />
                   <Button
                     variant="ghost"
                     size="sm"
