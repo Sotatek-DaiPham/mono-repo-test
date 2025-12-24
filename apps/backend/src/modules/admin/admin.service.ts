@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User, UserRole, UserTier } from '../../entities/user.entity';
 import { UserService } from '../user/user.service';
+import { SocketGateway } from '../socket/socket.gateway';
 import { UserListQueryDto } from './dto/user-list-query.dto';
 
 @Injectable()
@@ -11,6 +12,7 @@ export class AdminService {
     private userService: UserService,
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private socketGateway: SocketGateway,
   ) {}
 
   async findAllUsers(query: UserListQueryDto) {
@@ -96,8 +98,17 @@ export class AdminService {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
 
+    const oldTier = user.tier;
     user.tier = tier;
     await this.userRepository.save(user);
+
+    // Emit socket event for real-time notification
+    this.socketGateway.emitUserTierUpdated(
+      id,
+      tier,
+      oldTier,
+      `Your plan has been updated to ${tier}.`,
+    );
 
     const { password, ...result } = user;
     return result;
@@ -117,6 +128,12 @@ export class AdminService {
     user.isBanned = true;
     await this.userRepository.save(user);
 
+    // Emit socket event for real-time notification and forced logout
+    this.socketGateway.emitUserBanned(
+      id,
+      'Your account has been banned by an administrator.',
+    );
+
     const { password, ...result } = user;
     return result;
   }
@@ -129,6 +146,12 @@ export class AdminService {
 
     user.isBanned = false;
     await this.userRepository.save(user);
+
+    // Emit socket event for real-time notification
+    this.socketGateway.emitUserUnbanned(
+      id,
+      'Your account has been unbanned. You can now log in again.',
+    );
 
     const { password, ...result } = user;
     return result;
