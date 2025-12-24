@@ -1,39 +1,19 @@
 import { Routes, Route } from 'react-router-dom';
 import { AppProviders } from './app/providers';
-import { AdminLayout } from './widgets/layout/admin-layout';
-import { HomePage } from './pages/home';
-import { LoginPage } from './pages/login';
-import { UsersPage } from './pages/users';
-import { UIShowcasePage } from './pages/ui-showcase';
-import { ProtectedRoute } from './shared/lib/auth/ProtectedRoute';
-import { ROUTES } from './shared/constants/routes';
+import { routes } from './shared/config/routes.config';
+import { renderRoute } from './shared/lib/routing/route-renderer';
 
 function App() {
   return (
     <AppProviders>
       <Routes>
-        <Route path={ROUTES.LOGIN} element={<LoginPage />} />
-        <Route
-          path={ROUTES.HOME}
-          element={
-            <ProtectedRoute>
-              <AdminLayout>
-                <HomePage />
-              </AdminLayout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path={ROUTES.USERS}
-          element={
-            <ProtectedRoute>
-              <AdminLayout>
-                <UsersPage />
-              </AdminLayout>
-            </ProtectedRoute>
-          }
-        />
-        <Route path={ROUTES.UI_SHOWCASE} element={<UIShowcasePage />} />
+        {routes.map((route) => (
+          <Route
+            key={route.path}
+            path={route.path}
+            element={renderRoute(route)}
+          />
+        ))}
       </Routes>
     </AppProviders>
   );
