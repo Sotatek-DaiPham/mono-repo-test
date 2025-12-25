@@ -21,6 +21,17 @@ export interface UpdateTodoRequest {
   priority?: TodoPriority | null;
 }
 
+// Note API
+export interface CreateNoteRequest {
+  title?: string | null;
+  content?: string;
+}
+
+export interface UpdateNoteRequest {
+  title?: string | null;
+  content?: string;
+}
+
 // Admin API
 export interface UserListResponse {
   data: User[];

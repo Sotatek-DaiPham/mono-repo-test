@@ -9,5 +9,10 @@ export const API_ENDPOINTS = {
     BASE: '/todos',
     BY_ID: (id: string) => `/todos/${id}`,
   },
+  NOTES: {
+    BASE: '/notes',
+    BY_ID: (id: string) => `/notes/${id}`,
+    COUNT: '/notes/count',
+  },
 } as const;
 
