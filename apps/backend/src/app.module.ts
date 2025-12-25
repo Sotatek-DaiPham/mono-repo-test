@@ -5,6 +5,7 @@ import databaseConfig from './config/database.config';
 import jwtConfig from './config/jwt.config';
 import { UserModule } from './modules/user/user.module';
 import { TodoModule } from './modules/todo/todo.module';
+import { NoteModule } from './modules/note/note.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { SocketModule } from './modules/socket/socket.module';
@@ -28,6 +29,7 @@ import { SocketModule } from './modules/socket/socket.module';
     }),
     UserModule,
     TodoModule,
+    NoteModule,
     AuthModule,
     AdminModule,
     SocketModule,

@@ -7,6 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Todo } from './todo.entity';
+import { Note } from './note.entity';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -49,6 +50,9 @@ export class User {
 
   @OneToMany(() => Todo, (todo) => todo.user)
   todos: Todo[];
+
+  @OneToMany(() => Note, (note) => note.user)
+  notes: Note[];
 
   @CreateDateColumn()
   createdAt: Date;
