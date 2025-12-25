@@ -3,7 +3,7 @@
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { noteService } from '@/shared/api';
 import { UpdateNoteRequest } from '@/shared/lib/types';
 import { Note } from '@/entities/note';
@@ -11,12 +11,15 @@ import { Loader2, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { EditorToolbar } from './toolbar';
 import { useAutoSave } from '@/shared/lib/hooks/use-auto-save';
+import { Input } from '@/components/ui/input';
 
 interface NoteEditorProps {
   note: Note;
 }
 
 export function NoteEditor({ note }: NoteEditorProps) {
+  const [title, setTitle] = useState(note.title || '');
+
   // Auto-save hook
   const {
     isSaving,
@@ -36,6 +39,7 @@ export function NoteEditor({ note }: NoteEditorProps) {
   const editor = useEditor({
     extensions: [StarterKit, Underline],
     content: note.content || '',
+    immediatelyRender: false, // Prevent SSR hydration mismatch
     editorProps: {
       attributes: {
         class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none focus:outline-none min-h-[400px] p-4',
@@ -46,31 +50,36 @@ export function NoteEditor({ note }: NoteEditorProps) {
     },
   });
 
-  // Auto-save when content changes
+  // Auto-save when title or content changes
+  useEffect(() => {
+    if (!editor) return;
+
+    const html = editor.getHTML();
+    const contentChanged = html !== (note.content || '');
+    const titleChanged = title !== (note.title || '');
+
+    if (contentChanged || titleChanged) {
+      setHasUnsavedChanges(true);
+    }
+  }, [editor?.getHTML(), title, note.content, note.title, setHasUnsavedChanges]);
+
+  // Auto-save with debounce
   useEffect(() => {
     if (!editor || !hasUnsavedChanges) return;
 
     const html = editor.getHTML();
-    const text = editor.getText();
-    
-    // Extract title from first line or first 50 chars
-    const firstLine = text.split('\n')[0].trim();
-    const title = firstLine.length > 0 && firstLine.length <= 50 
-      ? firstLine 
-      : firstLine.length > 50 
-      ? firstLine.substring(0, 50) + '...'
-      : null;
 
     save({
       content: html,
-      title,
+      title: title || null,
     });
-  }, [editor?.getHTML(), hasUnsavedChanges, save]);
+  }, [editor?.getHTML(), title, hasUnsavedChanges, save]);
 
-  // Update editor content when note changes
+  // Update editor content and title when note changes
   useEffect(() => {
     if (editor && note.content !== editor.getHTML()) {
       editor.commands.setContent(note.content || '');
+      setTitle(note.title || '');
       setHasUnsavedChanges(false);
     }
   }, [note.id]); // Only update when note ID changes (switching notes)
@@ -85,6 +94,16 @@ export function NoteEditor({ note }: NoteEditorProps) {
 
   return (
     <div className="flex flex-col h-full">
+      {/* Title Input */}
+      <div className="border-b px-4 py-3 bg-background">
+        <Input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Note title..."
+          className="text-lg font-semibold border-0 focus-visible:ring-0 focus-visible:ring-offset-0 px-0"
+        />
+      </div>
+
       {/* Toolbar */}
       <div className="border-b bg-muted/50 p-2">
         <EditorToolbar editor={editor} />

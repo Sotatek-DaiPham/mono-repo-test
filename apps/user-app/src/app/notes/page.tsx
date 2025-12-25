@@ -15,11 +15,13 @@ import { toast } from 'sonner';
 import { NoteListItem } from '@/widgets/notes/note-list-item';
 import { ROUTES } from '@/shared/constants/routes';
 import { useDebounce } from '@/shared/lib/hooks/use-debounce';
+import { CreateNoteDialog } from '@/features/notes/create-note-dialog';
 
 function NotesPageContent() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const debouncedSearch = useDebounce(search, 300);
 
   // Fetch notes with search
@@ -33,28 +35,23 @@ function NotesPageContent() {
     mutationFn: (data: CreateNoteRequest) => noteService.create(data),
     onSuccess: (newNote) => {
       queryClient.invalidateQueries({ queryKey: ['notes'] });
-      // Navigate to note editor (will be implemented in Phase 4)
-      // For now, just show success
       toast.success('Note created successfully');
-      // TODO: Navigate to note editor when Phase 4 is ready
-      // router.push(`${ROUTES.NOTES}/${newNote.id}`);
+      router.push(`${ROUTES.NOTES}/${newNote.id}`);
     },
     onError: (error) => {
       toast.error(error instanceof Error ? error.message : 'Failed to create note');
     },
   });
 
-  const handleCreateNote = () => {
+  const handleCreateNote = (title: string, content: string) => {
     createMutation.mutate({
-      title: null,
-      content: '',
+      title,
+      content,
     });
   };
 
   const handleNoteClick = (noteId: string) => {
-    // Navigate to note editor (will be implemented in Phase 4)
-    // router.push(`${ROUTES.NOTES}/${noteId}`);
-    toast.info('Note editor will be available in Phase 4');
+    router.push(`${ROUTES.NOTES}/${noteId}`);
   };
 
   return (
@@ -68,7 +65,7 @@ function NotesPageContent() {
               Your personal thinking space
             </p>
           </div>
-          <Button onClick={handleCreateNote} disabled={createMutation.isPending}>
+          <Button onClick={() => setCreateDialogOpen(true)} disabled={createMutation.isPending}>
             {createMutation.isPending ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -113,7 +110,7 @@ function NotesPageContent() {
                 : 'Create your first note to get started'}
             </p>
             {!debouncedSearch && (
-              <Button onClick={handleCreateNote}>
+              <Button onClick={() => setCreateDialogOpen(true)}>
                 <Plus className="h-4 w-4 mr-2" />
                 Create Note
               </Button>
@@ -130,6 +127,14 @@ function NotesPageContent() {
             ))}
           </div>
         )}
+
+        {/* Create Note Dialog */}
+        <CreateNoteDialog
+          open={createDialogOpen}
+          onOpenChange={setCreateDialogOpen}
+          onConfirm={handleCreateNote}
+          isLoading={createMutation.isPending}
+        />
       </div>
     </MainLayout>
   );
