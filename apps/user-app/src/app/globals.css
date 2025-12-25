@@ -318,3 +318,51 @@
   margin-bottom: 0;
 }
 
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+  display: block;
+}
+
+.ProseMirror img.ProseMirror-selectednode {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.ProseMirror .image-wrapper {
+  position: relative;
+  display: inline-block;
+  margin: 1rem 0;
+}
+
+.ProseMirror .image-wrapper:hover .image-resize-handle {
+  opacity: 1 !important;
+}
+
+.ProseMirror .image-resize-handle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  background: hsl(var(--ring));
+  border: 2px solid hsl(var(--background));
+  border-radius: 4px;
+  cursor: nwse-resize;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: hsl(var(--background));
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 10;
+  user-select: none;
+}
+
+.ProseMirror .image-resize-handle:hover {
+  background: hsl(var(--ring) / 0.8);
+}
+

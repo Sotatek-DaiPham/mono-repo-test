@@ -127,14 +127,14 @@ export class NoteController {
   }
 
   @Post('upload-image')
-  @UseInterceptors(FileInterceptor('image'))
+  @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
   @ApiOperation({ summary: 'Upload an image for note (Premium/Pro only)' })
   @ApiBody({
     schema: {
       type: 'object',
       properties: {
-        image: {
+        file: {
           type: 'string',
           format: 'binary',
         },

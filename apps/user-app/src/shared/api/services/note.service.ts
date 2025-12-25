@@ -40,5 +40,21 @@ export const noteService = {
   delete: async (id: string): Promise<void> => {
     await apiClient.delete(API_ENDPOINTS.NOTES.BY_ID(id));
   },
+
+  uploadImage: async (file: File): Promise<{ url: string; publicId: string }> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    const response = await apiClient.post<{ url: string; publicId: string }>(
+      API_ENDPOINTS.NOTES.UPLOAD_IMAGE,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
+    return response.data;
+  },
 };
 

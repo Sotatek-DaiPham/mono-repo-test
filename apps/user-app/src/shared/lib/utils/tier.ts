@@ -6,6 +6,7 @@ export interface TierFeatures {
   canSetDueDate: boolean;
   canSetPriority: boolean;
   canUseAdvancedFilters: boolean;
+  canUploadImages: boolean;
 }
 
 export interface TierLimits {
@@ -18,16 +19,19 @@ export const TIER_FEATURES: Record<UserTier, TierFeatures> = {
     canSetDueDate: false,
     canSetPriority: false,
     canUseAdvancedFilters: false,
+    canUploadImages: false,
   },
   [UserTier.PREMIUM]: {
     canSetDueDate: true,
     canSetPriority: false,
     canUseAdvancedFilters: false,
+    canUploadImages: true,
   },
   [UserTier.PRO]: {
     canSetDueDate: true,
     canSetPriority: true,
     canUseAdvancedFilters: true,
+    canUploadImages: true,
   },
 };
 
@@ -53,6 +57,7 @@ export function canUserUseFeature(tier: UserTier, feature: keyof TierFeatures): 
 export function getRequiredTierForFeature(feature: keyof TierFeatures): UserTier {
   if (feature === 'canSetDueDate') return UserTier.PREMIUM;
   if (feature === 'canSetPriority') return UserTier.PRO;
+  if (feature === 'canUploadImages') return UserTier.PREMIUM;
   return UserTier.NORMAL;
 }
 

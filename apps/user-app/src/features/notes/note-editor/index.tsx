@@ -4,6 +4,7 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import { useEffect, useState } from 'react';
+import { ResizableImage } from './image-resize-extension';
 import { noteService } from '@/shared/api';
 import { UpdateNoteRequest } from '@/shared/lib/types';
 import { Note } from '@/entities/note';
@@ -37,7 +38,11 @@ export function NoteEditor({ note }: NoteEditorProps) {
 
   // Initialize editor with note content
   const editor = useEditor({
-    extensions: [StarterKit, Underline],
+    extensions: [
+      StarterKit,
+      Underline,
+      ResizableImage,
+    ],
     content: note.content || '',
     immediatelyRender: false, // Prevent SSR hydration mismatch
     editorProps: {
