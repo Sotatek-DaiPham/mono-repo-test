@@ -57,11 +57,25 @@ function NotesPageContent() {
     mutationFn: (data: CreateNoteRequest) => noteService.create(data),
     onSuccess: (newNote) => {
       queryClient.invalidateQueries({ queryKey: ['notes'] });
+      queryClient.invalidateQueries({ queryKey: ['notes', 'count'] });
       toast.success('Note created successfully');
       router.push(`${ROUTES.NOTES}/${newNote.id}`);
     },
     onError: (error) => {
       toast.error(error instanceof Error ? error.message : 'Failed to create note');
+    },
+  });
+
+  // Delete note mutation
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => noteService.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notes'] });
+      queryClient.invalidateQueries({ queryKey: ['notes', 'count'] });
+      toast.success('Note deleted successfully');
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : 'Failed to delete note');
     },
   });
 
@@ -74,6 +88,10 @@ function NotesPageContent() {
 
   const handleNoteClick = (noteId: string) => {
     router.push(`${ROUTES.NOTES}/${noteId}`);
+  };
+
+  const handleDeleteNote = (noteId: string) => {
+    deleteMutation.mutate(noteId);
   };
 
   return (
@@ -177,6 +195,8 @@ function NotesPageContent() {
                 key={note.id}
                 note={note}
                 onClick={() => handleNoteClick(note.id)}
+                onDelete={handleDeleteNote}
+                isDeleting={deleteMutation.isPending}
               />
             ))}
           </div>
