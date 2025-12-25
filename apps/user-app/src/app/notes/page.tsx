@@ -16,6 +16,9 @@ import { NoteListItem } from '@/widgets/notes/note-list-item';
 import { ROUTES } from '@/shared/constants/routes';
 import { useDebounce } from '@/shared/lib/hooks/use-debounce';
 import { CreateNoteDialog } from '@/features/notes/create-note-dialog';
+import { useAuthStore } from '@/shared/lib/store/auth.store';
+import { hasReachedNoteLimit, getTierLimits } from '@/shared/lib/utils/tier';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 function NotesPageContent() {
   const router = useRouter();
@@ -24,11 +27,30 @@ function NotesPageContent() {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const debouncedSearch = useDebounce(search, 300);
 
+  // Get user from auth store
+  const user = useAuthStore((state) => state.user);
+
   // Fetch notes with search
   const { data: notes = [], isLoading } = useQuery({
     queryKey: ['notes', debouncedSearch],
     queryFn: () => noteService.getAll(debouncedSearch || undefined),
   });
+
+  // Fetch note count for tier limit check
+  const { data: noteCountData } = useQuery({
+    queryKey: ['notes', 'count'],
+    queryFn: () => noteService.getCount(),
+  });
+
+  const noteCount = noteCountData?.count || 0;
+
+  // Check tier limit
+  const tier = user?.tier;
+  const isAtLimit = tier ? hasReachedNoteLimit(tier, noteCount) : false;
+  const maxNotes = tier ? getTierLimits(tier).maxNotes : 10;
+  const limitMessage = tier && maxNotes !== Infinity
+    ? `You've reached the limit of ${maxNotes} notes for ${tier} tier. Upgrade to create more notes.`
+    : '';
 
   // Create note mutation
   const createMutation = useMutation({
@@ -65,19 +87,35 @@ function NotesPageContent() {
               Your personal thinking space
             </p>
           </div>
-          <Button onClick={() => setCreateDialogOpen(true)} disabled={createMutation.isPending}>
-            {createMutation.isPending ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Creating...
-              </>
-            ) : (
-              <>
-                <Plus className="h-4 w-4 mr-2" />
-                New Note
-              </>
-            )}
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span>
+                  <Button
+                    onClick={() => setCreateDialogOpen(true)}
+                    disabled={createMutation.isPending || isAtLimit}
+                  >
+                    {createMutation.isPending ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Creating...
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="h-4 w-4 mr-2" />
+                        New Note
+                      </>
+                    )}
+                  </Button>
+                </span>
+              </TooltipTrigger>
+              {isAtLimit && (
+                <TooltipContent>
+                  <p>{limitMessage}</p>
+                </TooltipContent>
+              )}
+            </Tooltip>
+          </TooltipProvider>
         </div>
 
         {/* Search */}
@@ -110,10 +148,26 @@ function NotesPageContent() {
                 : 'Create your first note to get started'}
             </p>
             {!debouncedSearch && (
-              <Button onClick={() => setCreateDialogOpen(true)}>
-                <Plus className="h-4 w-4 mr-2" />
-                Create Note
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span>
+                      <Button
+                        onClick={() => setCreateDialogOpen(true)}
+                        disabled={isAtLimit}
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Create Note
+                      </Button>
+                    </span>
+                  </TooltipTrigger>
+                  {isAtLimit && (
+                    <TooltipContent>
+                      <p>{limitMessage}</p>
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              </TooltipProvider>
             )}
           </div>
         ) : (

@@ -8,6 +8,11 @@ export interface TierFeatures {
   canUseAdvancedFilters: boolean;
 }
 
+export interface TierLimits {
+  maxTodos: number;
+  maxNotes: number;
+}
+
 export const TIER_FEATURES: Record<UserTier, TierFeatures> = {
   [UserTier.NORMAL]: {
     canSetDueDate: false,
@@ -26,6 +31,21 @@ export const TIER_FEATURES: Record<UserTier, TierFeatures> = {
   },
 };
 
+export const TIER_LIMITS: Record<UserTier, TierLimits> = {
+  [UserTier.NORMAL]: {
+    maxTodos: 10,
+    maxNotes: 2,
+  },
+  [UserTier.PREMIUM]: {
+    maxTodos: 50,
+    maxNotes: 3,
+  },
+  [UserTier.PRO]: {
+    maxTodos: Infinity,
+    maxNotes: 4,
+  },
+};
+
 export function canUserUseFeature(tier: UserTier, feature: keyof TierFeatures): boolean {
   return TIER_FEATURES[tier][feature];
 }
@@ -38,5 +58,14 @@ export function getRequiredTierForFeature(feature: keyof TierFeatures): UserTier
 
 export function getTierDisplayName(tier: UserTier): string {
   return tier.charAt(0).toUpperCase() + tier.slice(1);
+}
+
+export function getTierLimits(tier: UserTier): TierLimits {
+  return TIER_LIMITS[tier];
+}
+
+export function hasReachedNoteLimit(tier: UserTier, currentCount: number): boolean {
+  const limits = getTierLimits(tier);
+  return limits.maxNotes !== Infinity && currentCount >= limits.maxNotes;
 }
 
