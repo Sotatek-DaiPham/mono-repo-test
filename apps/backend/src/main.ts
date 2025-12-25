@@ -2,6 +2,11 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { DateTransformInterceptor } from './common/interceptors/date-transform.interceptor';
+
+// Set Node.js process timezone to UTC
+// This ensures all Date operations use UTC timezone
+process.env.TZ = 'UTC';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -20,6 +25,9 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  // Global date transform interceptor - ensures all Date objects are serialized as ISO strings
+  app.useGlobalInterceptors(new DateTransformInterceptor());
 
   // Swagger setup
   const config = new DocumentBuilder()

@@ -9,6 +9,7 @@ import { NoteModule } from './modules/note/note.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { SocketModule } from './modules/socket/socket.module';
+import { TimezoneSubscriber } from './common/subscribers/timezone.subscriber';
 
 @Module({
   imports: [
@@ -26,6 +27,13 @@ import { SocketModule } from './modules/socket/socket.module';
       autoLoadEntities: true,
       synchronize: process.env.NODE_ENV === 'development',
       logging: process.env.NODE_ENV === 'development',
+      subscribers: [TimezoneSubscriber],
+      extra: {
+        // Force PostgreSQL to use UTC timezone for all operations
+        // This ensures timestamps are stored and retrieved in UTC
+        // The -c flag sets a configuration parameter for this connection
+        options: '-c timezone=UTC',
+      },
     }),
     UserModule,
     TodoModule,
