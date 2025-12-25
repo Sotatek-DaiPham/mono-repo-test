@@ -42,6 +42,12 @@ export function MainLayout({ children }: MainLayoutProps) {
                     Todos
                   </Link>
                   <Link
+                    href={ROUTES.NOTES}
+                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Notes
+                  </Link>
+                  <Link
                     href={ROUTES.PROFILE}
                     className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
                   >
