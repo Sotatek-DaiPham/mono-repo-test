@@ -79,7 +79,7 @@ export class AdminService {
     const user = await this.userRepository.findOne({
       where: { id },
       select: ['id', 'email', 'role', 'tier', 'isBanned', 'createdAt', 'updatedAt'],
-      relations: ['todos'],
+      relations: ['todos', 'notes'],
     });
 
     if (!user) {
@@ -89,6 +89,7 @@ export class AdminService {
     return {
       ...user,
       todosCount: user.todos?.length || 0,
+      notesCount: user.notes?.length || 0,
     };
   }
 

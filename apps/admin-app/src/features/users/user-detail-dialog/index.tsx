@@ -160,6 +160,12 @@ export function UserDetailDialog({
                   <p className="mt-1 text-sm font-medium">{user.todosCount}</p>
                 </div>
               )}
+              {user.notesCount !== undefined && (
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Notes Count</label>
+                  <p className="mt-1 text-sm font-medium">{user.notesCount}</p>
+                </div>
+              )}
               <div>
                 <label className="text-sm font-medium text-muted-foreground">Created At</label>
                 <p className="mt-1 text-sm">

@@ -23,5 +23,6 @@ export interface User {
 
 export interface UserDetail extends User {
   todosCount?: number;
+  notesCount?: number;
 }
 
