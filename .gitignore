@@ -15,6 +15,11 @@ out
 # TypeScript
 *.tsbuildinfo
 
+# TypeScript build artifacts in shared package (should only have .ts files)
+packages/shared/src/**/*.js
+packages/shared/src/**/*.d.ts
+packages/shared/src/**/*.js.map
+
 # Misc
 .DS_Store
 *.pem
