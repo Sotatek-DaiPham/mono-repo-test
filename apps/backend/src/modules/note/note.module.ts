@@ -4,11 +4,12 @@ import { Note } from '../../entities/note.entity';
 import { UserModule } from '../user/user.module';
 import { NoteService } from './note.service';
 import { NoteController } from './note.controller';
+import { CloudinaryService } from '../../common/services/cloudinary.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Note]), UserModule],
   controllers: [NoteController],
-  providers: [NoteService],
+  providers: [NoteService, CloudinaryService],
   exports: [NoteService],
 })
 export class NoteModule {}
